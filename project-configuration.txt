@@ -1,0 +1,149 @@
+Mumbai Router  ----->
+en
+config t
+hostname Mumbai
+interface fa0/0
+ip address 10.0.0.1 255.0.0.0
+no shutdown
+interface serial0/0/0
+ip address 20.0.0.1 255.0.0.0
+clock rate 64000
+no shutdown
+exit
+ip ftp username shibu
+ip ftp username shibu@123
+
+!!!!!!!!!OSPF ROUTE !!!!!!
+router ospf 10
+router-id 1.1.1.1
+exit
+int fa0/0
+ip ospf 10 area 0
+int se0/0/0
+ip ospf 10 area 0
+exit
+
+!!!!!!!! ntp server on router !!!!!!!
+
+ntp server 40.0.0.3
+
+!!!!!!!!!!!!!!!!!!FTP backup !!!!!!!!!!!!!!!!
+
+copy running-config ftp:
+Address or name of remote host []? 10.0.0.4
+Destination filename [Mumbai-confg]? mumbai-config
+
+!!!!!!!!!!!!!! Telnet on Mumbai router !!!!!!!!!!!!
+enable password shibu@123
+Mumbai(config)#username admin password admin
+Mumbai(config)#username shibu password shibu@123
+Mumbai(config)#line vty 0 3
+Mumbai(config-line)#login local
+
+
+
+
+Delhi Router ------>
+en
+config t
+hostname Delhi
+interface fa0/0
+ip address 40.0.0.1 255.0.0.0
+no shutdown
+interface serial0/0/0
+ip address 20.0.0.2 255.0.0.0
+no shutdown
+interface serial0/0/1
+ip address 30.0.0.1 255.0.0.0
+clock rate 64000
+no shutdown
+exit
+ip ftp username shibu
+ip ftp username shibu@123
+
+!!!!!!!!!OSPF ROUTE !!!!!!
+router ospf 10
+router-id 2.2.2.2
+exit
+int fa0/0
+ip ospf 10 area 0
+int se0/0/0
+ip ospf 10 area 0
+int se0/0/1
+ip ospf 10 area 0
+exit
+
+!!!!!!!! ntp server on router !!!!!!!
+
+ntp server 40.0.0.3
+
+!!!!!!!!!!!!!!!!!!FTP backup !!!!!!!!!!!!!!!!
+
+copy running-config ftp:
+Address or name of remote host []? 10.0.0.4
+Destination filename [Mumbai-confg]? delhi-config
+
+
+!!!!!!!!!!!!!! Telnet on Delhi router !!!!!!!!!!!!
+enable password shibu@123
+Mumbai(config)#username admin password admin
+Mumbai(config)#username shibu password shibu@123
+Mumbai(config)#line vty 0 3
+Mumbai(config-line)#login local
+
+
+
+
+
+
+Chennai Router ------>
+
+en
+config t
+hostname Chennai
+interface fa0/0
+ip address 50.0.0.1 255.0.0.0
+no shutdown
+interface serial0/0/0
+ip address 30.0.0.2 255.0.0.0
+no shutdown
+exit
+ip ftp username shibu
+ip ftp username shibu@123
+
+!!!!!!!! DHCP CONFIG !!!!!!!!!
+ip dhcp excluded 50.0.0.1
+ip dhcp pool ch-net
+network 50.0.0.0 255.0.0.0
+default-router 50.0.0.1
+dns-server 10.0.0.2
+exit
+
+!!!!!!!!!OSPF ROUTE !!!!!!
+router ospf 10
+router-id 3.3.3.3
+exit
+int fa0/0
+ip ospf 10 area 0
+int se0/0/0
+ip ospf 10 area 0
+exit
+
+!!!!!!!! ntp server on router !!!!!!!
+
+ntp server 40.0.0.3
+
+
+!!!!!!!!!!!!!!!!!!FTP backup !!!!!!!!!!!!!!!!
+
+copy running-config ftp:
+Address or name of remote host []? 10.0.0.4
+Destination filename [Mumbai-confg]? chennai-config
+
+
+!!!!!!!!!!!!!! Telnet on Chennai router !!!!!!!!!!!!
+enable password shibu@123
+Mumbai(config)#username admin password admin
+Mumbai(config)#username shibu password shibu@123
+Mumbai(config)#line vty 0 3
+Mumbai(config-line)#login local
